@@ -9,6 +9,7 @@
                  <input class="row-input row-input-right" type="text" placeholder="请输入公司ID" :value="compno"
                         @input="onCompNoChange" :autofocus="true"/>
           </div>
+          
               <div class="row row-line">
                  <input class="row-input row-input-right" type="number" placeholder="请输入手机号码" :value="account"
                         @input="onAccountChange" :autofocus="true"/>
