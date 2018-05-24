@@ -14,7 +14,7 @@
  import {mapState} from "vuex"
 
 const modal = weex.requireModule('modal');
-
+//首页
 export default {
     components:{NavigationBar},
     data(){
