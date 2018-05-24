@@ -133,7 +133,8 @@
     const modal = weex.requireModule('modal')
     const dom = weex.requireModule('dom');
     const animation = weex.requireModule('animation');
-//测试使用 看看咋样
+//测试使用 看看咋样 
+//不对啊 还是这样
 export default{
     components:{
         WxcLoading
