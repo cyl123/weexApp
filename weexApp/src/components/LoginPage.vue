@@ -2,7 +2,7 @@
     <div class="wrapper" :style="{ height: height + 'px' }">
         <wxc-loading :show="isShow" type="trip"></wxc-loading>
         <div class="login-top">
-            <text class="login-top-text">颜术</text>
+            <text class="login-top-text">XX</text>
         </div>
          <div class="login-content">
           <div class="row row-line">
