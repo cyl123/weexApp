@@ -5089,9 +5089,9 @@ var Config = _interopRequireWildcard(_Config);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-var host = "http://api.yeskin.yunya365.com/api/v1/"; /**
-                                                      * Created by guoshuyu on 2017/11/8.
-                                                      */
+var host = "http://xx/api/v1/"; /**
+                                 * Created by guoshuyu on 2017/11/8.
+                                 */
 
 var hostWeb = exports.hostWeb = "https://github.com/";
 var downloadUrl = exports.downloadUrl = 'https://www.pgyer.com/GSYGithubApp';

@@ -4,7 +4,7 @@
 
 import * as Config from '../../config/Config'
 
-let host = "http://api.yeskin.yunya365.com/api/v1/";
+let host = "http://xx/api/v1/";
 export const hostWeb = "https://github.com/";
 export const downloadUrl = 'https://www.pgyer.com/GSYGithubApp';
 export const graphicHost = 'https://ghchart.rshah.org/';
