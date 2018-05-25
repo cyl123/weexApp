@@ -5034,9 +5034,9 @@ var Config = _interopRequireWildcard(_Config);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-var host = "http://xx/api/v1/"; /**
-                                 * Created by guoshuyu on 2017/11/8.
-                                 */
+var host = "http://api.yeskin.yunya365.com/api/v1/"; /**
+                                                      * Created by guoshuyu on 2017/11/8.
+                                                      */
 
 var hostWeb = exports.hostWeb = "https://github.com/";
 var downloadUrl = exports.downloadUrl = 'https://www.pgyer.com/GSYGithubApp';
@@ -27425,24 +27425,24 @@ exports.default = {
     // 使用 iconFont 模式的tab title配置
     tabIconFontTitles: [{
         title: '我的',
-        codePoint: '\uE684'
+        codePoint: '\uE60A'
     }, {
         title: '就诊',
-        codePoint: '\uE684'
+        codePoint: '\uE61D'
     }, {
         title: '预约',
-        codePoint: '\uE684'
+        codePoint: '\uE623'
     }, {
         title: '客户',
-        codePoint: '\uE818'
+        codePoint: '\uE606'
     }, {
         title: '我的',
-        codePoint: '\uE6D0'
+        codePoint: '\uE6AB'
     }],
     tabIconFontStyles: {
         bgColor: '#fbfbfb',
         titleColor: '#666666',
-        activeTitleColor: Config.primaryColor,
+        activeTitleColor: '#249FE6', //Config.primaryColor,
         activeBgColor: '#fbfbfb',
         isActiveTitleBold: true,
         width: 160,
@@ -27453,7 +27453,7 @@ exports.default = {
         iconFontSize: 40,
         iconFontMarginBottom: 8,
         iconFontColor: '#AAAAAA',
-        activeIconFontColor: 'black',
+        activeIconFontColor: '#249FE6',
         iconFontUrl: (0, _IconConfig.getIonFontPath)("../")
     }
 };
@@ -28184,15 +28184,23 @@ module.exports = __vue_exports__
 /***/ (function(module, exports) {
 
 module.exports = {
+  "clinicList": {
+    "backgroundColor": "#FFFFFF",
+    "maxHeight": "500"
+  },
   "clinicCell": {
     "height": "80",
     "width": "750",
-    "backgroundColor": "#FFFF00",
     "marginBottom": "10"
   },
   "clinicName": {
     "textAlign": "center",
-    "backgroundColor": "#FAEBD7"
+    "height": "80",
+    "borderBottomColor": "#C9C9C9",
+    "borderBottomWidth": "1",
+    "marginLeft": "20",
+    "marginRight": "20",
+    "lineHeight": "80"
   }
 }
 
@@ -28290,7 +28298,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }, [_c('text', {
       staticClass: ["clinicName"]
-    }, [_vm._v(_vm._s(item.name))])])
+    }, [_vm._v(_vm._s(item.isGeneral ? '总' : '门') + "-" + _vm._s(item.name))])])
   })) : _vm._e()], 1)
 },staticRenderFns: []}
 module.exports.render._withStripped = true

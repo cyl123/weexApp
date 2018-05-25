@@ -8,29 +8,29 @@ export default {
     tabIconFontTitles: [
         {
             title: '我的',
-            codePoint: '\ue684'
+            codePoint: '\ue60a'
         },
         {
             title: '就诊',
-            codePoint: '\ue684'
+            codePoint: '\ue61d'
         },
         {
             title: '预约',
-            codePoint: '\ue684'
+            codePoint: '\ue623'
         },
         {
             title: '客户',
-            codePoint: '\ue818'
+            codePoint: '\ue606'
         },
         {
             title: '我的',
-            codePoint: '\ue6d0',
+            codePoint: '\ue6ab',
         }
     ],
     tabIconFontStyles: {
         bgColor: '#fbfbfb',
         titleColor: '#666666',
-        activeTitleColor: Config.primaryColor,
+        activeTitleColor: '#249FE6',//Config.primaryColor,
         activeBgColor: '#fbfbfb',
         isActiveTitleBold: true,
         width: 160,
@@ -41,7 +41,7 @@ export default {
         iconFontSize: 40,
         iconFontMarginBottom: 8,
         iconFontColor: '#AAAAAA',
-        activeIconFontColor: 'black',
+        activeIconFontColor: '#249FE6',
         iconFontUrl: getIonFontPath("../")
     }
 }

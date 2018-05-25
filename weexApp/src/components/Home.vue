@@ -4,7 +4,7 @@
                         :rightIcon="'切换'" :leftIcon="''"></navigation-bar>
         <list class="clinicList" v-if="isClinicShow">
             <cell class="clinicCell" v-for="(item, index) in cliniclist" :key="index">
-                <text class="clinicName">{{item.name}}</text>
+                <text class="clinicName">{{item.isGeneral ? '总' : '门'}}-{{item.name}}</text>
             </cell>
         </list>
     </div>
@@ -52,16 +52,26 @@ export default {
 </script>
 
 <style scoped>
+
+.clinicList{
+    background-color: white;
+    max-height: 500px;
+}
+
 .clinicCell{
     height: 80px;
     width: 750px;
-    background-color: yellow;
     margin-bottom: 10px;
 }
 
 .clinicName{
-    text-align: center;
-    background-color: antiquewhite
+   text-align: center;
+    height: 80px;
+    border-bottom-color: #C9C9C9;
+    border-bottom-width: 1px;
+    margin-left: 20px;
+    margin-right: 20px;
+    line-height: 80px;
 }
 
 </style>
