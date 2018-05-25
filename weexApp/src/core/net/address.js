@@ -20,6 +20,9 @@ const AddressLocal = {
     switch:() => {
         return `${host}users/clinic/switch/get`
     },
+    doswitch:(clinicId) => {
+        return `${host}users/clinic/doswitch?clinicId=${clinicId}`
+    },
     /**
      * 搜索 get
      */

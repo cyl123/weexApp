@@ -2735,22 +2735,23 @@ var initUserInfo = function () {
             while (1) {
                 switch (_context.prev = _context.next) {
                     case 0:
-                        _context.next = 2;
+                        debugger;
+                        _context.next = 3;
                         return (0, _storageUtils.getCache)(Config.TOKEN_KEY);
 
-                    case 2:
+                    case 3:
                         token = _context.sent;
-                        _context.next = 5;
+                        _context.next = 6;
                         return getUserInfoLocal();
 
-                    case 5:
+                    case 6:
                         res = _context.sent;
                         return _context.abrupt('return', {
                             result: res.result && token !== null,
                             data: res.data
                         });
 
-                    case 7:
+                    case 8:
                     case 'end':
                         return _context.stop();
                 }
@@ -2915,12 +2916,66 @@ var switchClinic = function () {
     };
 }();
 
+/**
+ * 
+ */
+var doSwitchClinic = function () {
+    var _ref6 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee6(clinicId) {
+        var res, result, info;
+        return _regenerator2.default.wrap(function _callee6$(_context6) {
+            while (1) {
+                switch (_context6.prev = _context6.next) {
+                    case 0:
+                        _context6.next = 2;
+                        return _api2.default.netFetch(_address2.default.doswitch(clinicId), 'GET', null, true);
+
+                    case 2:
+                        res = _context6.sent;
+
+                        if (!(res && res.datas)) {
+                            _context6.next = 15;
+                            break;
+                        }
+
+                        _context6.next = 6;
+                        return getUserInfoLocal();
+
+                    case 6:
+                        result = _context6.sent;
+                        info = res.datas;
+
+                        info.password = result.data.password; //没有加密的
+                        info.compno = result.data.compno;
+                        info.account = result.data.account;
+                        (0, _storageUtils.setCache)(Config.TOKEN_KEY, info.accessToken);
+                        (0, _storageUtils.setCache)(Config.USER_ACCOUNT_KEY, info.account);
+                        (0, _storageUtils.setCache)(Config.USER_INFO, JSON.stringify(info));
+
+                        res.datas = info;
+
+                    case 15:
+                        return _context6.abrupt('return', res);
+
+                    case 16:
+                    case 'end':
+                        return _context6.stop();
+                }
+            }
+        }, _callee6, undefined);
+    }));
+
+    return function doSwitchClinic(_x4) {
+        return _ref6.apply(this, arguments);
+    };
+}();
+
 exports.default = {
     initUserInfo: initUserInfo,
     getUserInfoLocal: getUserInfoLocal,
     cleanUserInfoLocal: cleanUserInfoLocal,
     doLogin: doLogin,
-    switchClinic: switchClinic
+    switchClinic: switchClinic,
+    doSwitchClinic: doSwitchClinic
 };
 
 /***/ }),
@@ -5052,6 +5107,9 @@ var AddressLocal = {
     switch: function _switch() {
         return host + "users/clinic/switch/get";
     },
+    doswitch: function doswitch(clinicId) {
+        return host + "users/clinic/doswitch?clinicId=" + clinicId;
+    },
     /**
      * 搜索 get
      */
@@ -5804,6 +5862,15 @@ var actions = {
             state = _ref3.state;
 
         _user2.default.switchClinic().then(function (res) {
+            params.resultCallback && params.resultCallback(res);
+        });
+    },
+    doSwitchClinic: function doSwitchClinic(_ref4, params) {
+        var commit = _ref4.commit,
+            state = _ref4.state;
+
+        _user2.default.doSwitchClinic(params.clinicId).then(function (res) {
+            commit('storeUserInfo', res.datas);
             params.resultCallback && params.resultCallback(res);
         });
     }
@@ -28219,10 +28286,12 @@ var _NavigationBar = __webpack_require__(25);
 
 var _NavigationBar2 = _interopRequireDefault(_NavigationBar);
 
-var _vuex = __webpack_require__(9);
+var _weexUi = __webpack_require__(4);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//
+//
 //
 //
 //
@@ -28238,12 +28307,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var modal = weex.requireModule('modal');
 //首页
 exports.default = {
-    components: { NavigationBar: _NavigationBar2.default },
+    components: { NavigationBar: _NavigationBar2.default, WxcLoading: _weexUi.WxcLoading },
     data: function data() {
         return {
             title: this.$store.state.user.userInfo.orgName,
             isClinicShow: false,
-            cliniclist: []
+            cliniclist: [],
+            isShow: false
         };
     },
 
@@ -28254,23 +28324,51 @@ exports.default = {
         clinicList: function clinicList() {
             var _this = this;
 
+            this.isShow = true;
             this.$store.dispatch('switchClinic', {
                 resultCallback: function resultCallback(res) {
                     debugger;
                     _this.isClinicShow = true;
+                    _this.isShow = false;
                     if (res && res.success == 0) {
                         _this.cliniclist = res.datas;
                     } else {
                         modal.toast({ message: res.message });
-                        if (res && res.success == 4) {
+                        if (res && (res.success == 4 || res.success == 1)) {
                             _this.reset("/login");
+                        }
+                    }
+                }
+            });
+        },
+        doSwitchClinic: function doSwitchClinic(index) {
+            var _this2 = this;
+
+            this.isShow = true;
+            var item = this.cliniclist[index];
+            this.$store.dispatch('doSwitchClinic', {
+                clinicId: item.id,
+                resultCallback: function resultCallback(res) {
+                    _this2.isShow = false;
+                    if (res && res.success == 0) {
+                        _this2.isClinicShow = false;
+                        _this2.title = _this2.$store.state.user.userInfo.orgName;
+                        modal.toast({ message: '切换成功!' });
+                    } else {
+                        modal.toast({ message: res.message });
+                        if (res && (res.success == 4 || res.success == 1)) {
+                            _this2.reset("/login");
                         }
                     }
                 }
             });
         }
     },
-    created: function created() {}
+    created: function created() {
+        debugger;
+
+        console.log(this.$store.state.user.userInfo);
+    }
 };
 
 /***/ }),
@@ -28278,7 +28376,12 @@ exports.default = {
 /***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', [_c('navigation-bar', {
+  return _c('div', [_c('wxc-loading', {
+    attrs: {
+      "show": _vm.isShow,
+      "type": "trip"
+    }
+  }), _c('navigation-bar', {
     attrs: {
       "title": _vm.title,
       "onLeftButtonClick": function () {},
@@ -28290,11 +28393,22 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: ["clinicList"]
   }, _vm._l((_vm.cliniclist), function(item, index) {
     return _c('cell', {
+      directives: [{
+        name: "show",
+        rawName: "v-show",
+        value: (item.name != _vm.$store.state.user.userInfo.orgName),
+        expression: "item.name != $store.state.user.userInfo.orgName"
+      }],
       key: index,
       staticClass: ["clinicCell"],
       appendAsTree: true,
       attrs: {
         "append": "tree"
+      },
+      on: {
+        "click": function($event) {
+          _vm.doSwitchClinic(index)
+        }
       }
     }, [_c('text', {
       staticClass: ["clinicName"]
@@ -28309,6 +28423,9 @@ module.exports.render._withStripped = true
 
 var __vue_exports__, __vue_options__
 var __vue_styles__ = []
+
+/* script */
+__vue_exports__ = __webpack_require__(307)
 
 /* template */
 var __vue_template__ = __webpack_require__(292)
@@ -28344,7 +28461,20 @@ module.exports = __vue_exports__
 /***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', [_vm._v("\n就诊就诊就诊 \n ")])
+  return _c('div', [_c('wxc-loading', {
+    attrs: {
+      "show": _vm.isShow,
+      "type": "trip"
+    }
+  }), _c('navigation-bar', {
+    attrs: {
+      "title": _vm.title,
+      "onLeftButtonClick": function () {},
+      "onRightButtonClick": function () {},
+      "rightIcon": '',
+      "leftIcon": ''
+    }
+  })], 1)
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 
@@ -28744,6 +28874,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }) : _vm._e()], 1)
 },staticRenderFns: []}
 module.exports.render._withStripped = true
+
+/***/ }),
+/* 307 */
+/***/ (function(module, exports) {
+
+throw new Error("Module build failed: SyntaxError: Unexpected token (19:8)\n\n\u001b[0m \u001b[90m 17 | \u001b[39m            isShow\u001b[33m:\u001b[39m\u001b[36mfalse\u001b[39m\u001b[33m,\u001b[39m\n \u001b[90m 18 | \u001b[39m            title\u001b[33m:\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 19 | \u001b[39m        }\n \u001b[90m    | \u001b[39m        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 20 | \u001b[39m    }\u001b[33m,\u001b[39m\n \u001b[90m 21 | \u001b[39m    methods\u001b[33m:\u001b[39m{\n \u001b[90m 22 | \u001b[39m\u001b[0m\n");
 
 /***/ })
 /******/ ]);

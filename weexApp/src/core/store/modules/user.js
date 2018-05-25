@@ -29,6 +29,12 @@ const actions = {
             params.resultCallback && params.resultCallback(res);
         });
     },
+    doSwitchClinic({commit,state},params){
+        user.doSwitchClinic(params.clinicId).then(res=>{
+            commit('storeUserInfo', res.datas);
+            params.resultCallback && params.resultCallback(res);
+        });
+    },
 };
 
 // mutations

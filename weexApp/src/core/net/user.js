@@ -11,6 +11,7 @@ import md5 from 'js-md5';
  * 初始化用户信息
  */
 const initUserInfo = async () => {
+    debugger
     let token = await getCache(Config.TOKEN_KEY);
     let res = await getUserInfoLocal();
     return {
@@ -81,10 +82,35 @@ const switchClinic = async () => {
     return res;
 };
 
+/**
+ * 
+ */
+const doSwitchClinic = async (clinicId) => {
+    let res = await Api.netFetch(Address.doswitch(clinicId), 'GET', null, true);
+    //获取之后不需要做处理
+    if (res && res.datas) {
+        //数据处理
+        // removeCache
+        //这样存储进去是多个还是一个 ==》1个
+        let result = await getUserInfoLocal();
+        let info = res.datas;
+        info.password = result.data.password;//没有加密的
+        info.compno = result.data.compno;
+        info.account = result.data.account;
+        setCache(Config.TOKEN_KEY,info.accessToken);
+        setCache(Config.USER_ACCOUNT_KEY,info.account);
+        setCache(Config.USER_INFO,JSON.stringify(info));
+
+        res.datas = info;
+    }
+    return res;
+};
+
 export default {
     initUserInfo,
     getUserInfoLocal,
     cleanUserInfoLocal,
     doLogin,
-    switchClinic
+    switchClinic,
+    doSwitchClinic
 }
